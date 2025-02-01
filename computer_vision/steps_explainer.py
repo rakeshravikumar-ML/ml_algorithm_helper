@@ -3,7 +3,7 @@ import os
 import json
 
 # GitHub raw file URL for the notebook
-GITHUB_NOTEBOOK_URL = "https://raw.githubusercontent.com/rakeshravikumar-ML/ml_algorithm_helper/main/computer_vision/07_food_vision_milestone_project_1.ipynb"
+GITHUB_NOTEBOOK_URL = "https://raw.githubusercontent.com/rakeshravikumar-ML/ml_algorithm_helper/main/computer_vision/food_vision_project.ipynb"
 
 def download_notebook():
     """
