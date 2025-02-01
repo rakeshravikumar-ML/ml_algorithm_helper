@@ -63,7 +63,7 @@ from IPython.display import Markdown, display
 
 def explain_step(step_choice):
     """
-    Fetches and displays the explanation from the notebook for the selected step in Markdown format.
+    Fetches and displays the explanation from the notebook for the selected step in Markdown format with syntax highlighting.
     """
     file_path = download_notebook()
     if not file_path:
@@ -81,6 +81,7 @@ def explain_step(step_choice):
 
     found_heading = False
     extracted_explanation = []
+    formatted_output = []
 
     for cell in notebook_data["cells"]:
         if cell["cell_type"] == "markdown":
@@ -88,16 +89,20 @@ def explain_step(step_choice):
 
             if selected_heading in markdown_text:
                 found_heading = True
-                extracted_explanation.append(markdown_text)  # Include the header cell itself
+                formatted_output.append(f"## {selected_heading[3:]}\n")  # Remove "## "
+                formatted_output.append(markdown_text)  # Add markdown explanation
                 continue
             elif found_heading and markdown_text.startswith("## Step"):  # Stop at the next step heading
                 break
             elif found_heading:
-                extracted_explanation.append(markdown_text)  # Collect all markdown content
+                formatted_output.append(markdown_text)  # Collect all markdown content
+        
+        elif cell["cell_type"] == "code" and found_heading:
+            code_text = "".join(cell["source"])
+            formatted_output.append(f"```python\n{code_text}\n```")  # ✅ Syntax highlighting for code
 
-    if extracted_explanation:
-        markdown_output = f"### {selected_heading[3:]}\n\n" + "\n\n".join(extracted_explanation)
-        display(Markdown(markdown_output))  # ✅ Display as Markdown
+    if formatted_output:
+        display(Markdown("\n\n".join(formatted_output)))  # ✅ Show properly formatted markdown
     else:
         display(Markdown("⚠️ **No detailed explanation found in the notebook.** Check the markdown formatting."))
 
