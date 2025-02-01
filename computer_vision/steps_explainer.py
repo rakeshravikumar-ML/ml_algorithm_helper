@@ -23,12 +23,25 @@ def get_project_steps():
     Returns a dictionary of model development steps.
     """
     return {
-        1: "Load & preprocess dataset",
-        2: "Define the model architecture",
-        3: "Train the model",
-        4: "Evaluate the model",
-        5: "Make predictions",
-        6: "Visualize results"
+        1: "Introduction",
+        1: "Get Helper Functions",
+        2: "Using TensorFlow Datasets to download data",
+        4: "Explore Data",
+        5: "Plot an image from TensorFlow Datasets",
+        3: "Creating preprocessing function for data",
+        4: "Batching & preparing datasets for modelling (making datasets run fast)",
+        5: "Creating modelling callbacks",
+        6: "Setting up mixed precision training",
+        7: "Building a feature extraction model",
+        8: "Checking layer dtype policies (are we using mixed precision?)"
+        9: "Fit the feature extraction model",
+        10: "Load and evaluate checkpoint weights",
+        11: "Save the whole model to file"
+        12: "Preparing our model's layers for fine-tuning"
+        13: "A couple more callbacks"
+        14: "Download fine-tuned model from Google Storage"
+        8: "Fine-tuning the feature extraction model",
+        9: "Viewing training results on TensorBoard"
     }
 
 def show_project_steps():
