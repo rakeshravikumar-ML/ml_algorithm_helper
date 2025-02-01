@@ -24,35 +24,39 @@ def get_project_steps():
     """
     return {
         1: "Introduction",
-        1: "Get Helper Functions",
-        2: "Using TensorFlow Datasets to download data",
+        2: "Get Helper Functions",
+        3: "Using TensorFlow Datasets to download data",
         4: "Explore Data",
         5: "Plot an image from TensorFlow Datasets",
-        3: "Creating preprocessing function for data",
-        4: "Batching & preparing datasets for modelling (making datasets run fast)",
-        5: "Creating modelling callbacks",
-        6: "Setting up mixed precision training",
-        7: "Building a feature extraction model",
-        8: "Checking layer dtype policies (are we using mixed precision?)"
-        9: "Fit the feature extraction model",
-        10: "Load and evaluate checkpoint weights",
-        11: "Save the whole model to file"
-        12: "Preparing our model's layers for fine-tuning"
-        13: "A couple more callbacks"
-        14: "Download fine-tuned model from Google Storage"
-        8: "Fine-tuning the feature extraction model",
-        9: "Viewing training results on TensorBoard"
+        6: "Creating preprocessing function for data",
+        7: "Batching & preparing datasets for modelling (making datasets run fast)",
+        8: "Creating modelling callbacks",
+        9: "Setting up mixed precision training",
+        10: "Building a feature extraction model",
+        11: "Checking layer dtype policies (are we using mixed precision?)",
+        12: "Fit the feature extraction model",
+        13: "Load and evaluate checkpoint weights",
+        14: "Save the whole model to file",
+        15: "Preparing our model's layers for fine-tuning",
+        16: "A couple more callbacks",
+        17: "Download fine-tuned model from Google Storage",
+        18: "Fine-tuning the feature extraction model",
+        19: "Viewing training results on TensorBoard"
     }
 
 def show_project_steps():
     """
-    Displays the available model development steps and asks the user to select one.
+    Displays the available model development steps.
     """
     steps = get_project_steps()
     print("\nModel Development Steps:")
     for step, description in steps.items():
         print(f"{step}. {description}")
 
+def get_user_step_choice():
+    """
+    Asks the user for a step number.
+    """
     step_choice = int(input("\nWhich step do you need help with? Enter the step number: "))
     return step_choice
 
@@ -61,12 +65,25 @@ def explain_step(step_choice):
     Provides an explanation of the selected model development step.
     """
     explanations = {
-        1: "Data preprocessing includes resizing images, normalizing pixel values, and augmenting training data.",
-        2: "The model architecture is defined using Convolutional Neural Networks (CNNs), including Conv2D, MaxPooling, and Dense layers.",
-        3: "Model training is done using an optimizer (Adam), loss function (cross-entropy), and monitored using accuracy/loss metrics.",
-        4: "Evaluation is performed using a test dataset, calculating metrics such as accuracy and loss.",
-        5: "Predictions are made using the trained model on new input images.",
-        6: "Results are visualized using loss/accuracy plots, confusion matrices, and sample predictions."
+        1: "Introduction to the project, explaining objectives, dataset details, and expected outcomes.",
+        2: "Helper functions are loaded to speed up data preprocessing, training, and evaluation.",
+        3: "TensorFlow Datasets is used to load the dataset, providing easy access to preprocessed datasets.",
+        4: "Exploring the dataset includes visualizing images, understanding labels, and dataset distribution.",
+        5: "An image from TensorFlow Datasets is plotted to verify data loading correctness.",
+        6: "Preprocessing functions are created for resizing, normalizing, and augmenting images.",
+        7: "Batching is optimized to speed up data loading and reduce memory usage for training.",
+        8: "Model callbacks (like early stopping and checkpointing) are set up to improve training efficiency.",
+        9: "Mixed precision training is enabled to speed up model training on compatible GPUs.",
+        10: "A feature extraction model is built using a pre-trained CNN as the base model.",
+        11: "Dtype policies for layers are checked to ensure mixed precision is being used correctly.",
+        12: "The feature extraction model is trained using frozen base layers and newly added layers.",
+        13: "Checkpoint weights are loaded to continue training from the best checkpoint.",
+        14: "The trained model is saved in a format that can be reloaded and used later.",
+        15: "Model layers are prepared for fine-tuning by unfreezing specific layers of the pre-trained model.",
+        16: "Additional callbacks (such as learning rate scheduling) are added before fine-tuning.",
+        17: "The fine-tuned model is downloaded from Google Storage for evaluation.",
+        18: "The model undergoes fine-tuning, allowing deeper layers to adjust weights.",
+        19: "Training results are visualized using TensorBoard to monitor performance."
     }
 
     print("\nStep Explanation:")
@@ -74,37 +91,35 @@ def explain_step(step_choice):
 
 def show_code_for_step(step_choice):
     """
-    Fetches and displays relevant code from the notebook based on the selected step.
+    Fetches and displays relevant code from the notebook based on single `#` markdown headings.
     """
     file_path = download_notebook()  # Ensure the notebook is available
+    if not file_path:
+        return
 
-    # Define search patterns for extracting code
+    # ✅ Updated search patterns based on `# Header`
     step_code = {
-        1: "### Load and Preprocess Data",
-        2: "### Define the Model",
-        3: "### Train the Model",
-        4: "### Evaluate the Model",
-        5: "### Make Predictions",
-        6: "### Visualize Results"
+        1: "# Introduction",
+        2: "# Get Helper Functions",
+        3: "# Using TensorFlow Datasets to download data",
+        4: "# Explore Data",
+        5: "# Plot an image from TensorFlow Datasets",
+        6: "# Creating preprocessing function for data",
+        7: "# Batching & preparing datasets for modelling",
+        8: "# Creating modelling callbacks",
+        9: "# Setting up mixed precision training",
+        10: "# Building a feature extraction model",
+        11: "# Checking layer dtype policies",
+        12: "# Fit the feature extraction model",
+        13: "# Load and evaluate checkpoint weights",
+        14: "# Save the whole model to file",
+        15: "# Preparing our model's layers for fine-tuning",
+        16: "# A couple more callbacks",
+        17: "# Download fine-tuned model from Google Storage",
+        18: "# Fine-tuning the feature extraction model",
+        19: "# Viewing training results on TensorBoard"
     }
 
     selected_heading = step_code.get(step_choice, None)
     if not selected_heading:
-        print("Invalid step number. Try again.")
-        return
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        notebook_data = json.load(f)
-
-    code_snippets = []
-    for cell in notebook_data["cells"]:
-        if cell["cell_type"] == "code":
-            source_code = "".join(cell["source"])
-            if selected_heading in source_code:
-                code_snippets.append(source_code)
-
-    if code_snippets:
-        print(f"\nCode for Step {step_choice}:\n")
-        print(code_snippets[0])
-    else:
-        print("\nNo relevant code found for this step.")
+        print("Invalid step n
