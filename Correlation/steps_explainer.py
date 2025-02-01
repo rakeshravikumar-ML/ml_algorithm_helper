@@ -59,11 +59,12 @@ def get_user_step_choice():
     step_choice = int(input("\nWhich step do you need help with? Enter the step number: "))
     return step_choice
 
-from IPython.display import Markdown, display
+from IPython.display import display, HTML
 
 def explain_step(step_choice):
     """
-    Fetches and displays the explanation from the notebook for the selected step in Markdown format with syntax highlighting.
+    Fetches and displays the explanation from the notebook for the selected step 
+    in Markdown format with proper syntax highlighting using HTML & CSS.
     """
     file_path = download_notebook()
     if not file_path:
@@ -89,22 +90,30 @@ def explain_step(step_choice):
 
             if selected_heading in markdown_text:
                 found_heading = True
-                formatted_output.append(f"## {selected_heading[3:]}\n")  # Remove "## "
-                formatted_output.append(markdown_text)  # Add markdown explanation
+                formatted_output.append(f"<h2>{selected_heading[3:]}</h2>")  # Large header
+                formatted_output.append(f"<p>{markdown_text}</p>")  # Explanation text
                 continue
             elif found_heading and markdown_text.startswith("## Step"):  # Stop at the next step heading
                 break
             elif found_heading:
-                formatted_output.append(markdown_text)  # Collect all markdown content
+                formatted_output.append(f"<p>{markdown_text}</p>")  # Collect all markdown content
         
         elif cell["cell_type"] == "code" and found_heading:
             code_text = "".join(cell["source"])
-            formatted_output.append(f"```python\n{code_text}\n```")  # ✅ Syntax highlighting for code
+            formatted_output.append(f"<pre><code class='python'>{code_text}</code></pre>")  # ✅ Syntax highlighting
 
     if formatted_output:
-        display(Markdown("\n\n".join(formatted_output)))  # ✅ Show properly formatted markdown
+        css_style = """
+        <style>
+            pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+            code { font-family: monospace; font-size: 14px; }
+            h2 { color: #2a3f5f; }
+            p { font-size: 16px; }
+        </style>
+        """
+        display(HTML(css_style + "".join(formatted_output)))  # ✅ Display formatted HTML output
     else:
-        display(Markdown("⚠️ **No detailed explanation found in the notebook.** Check the markdown formatting."))
+        display(HTML("<p style='color:red;'>⚠️ No detailed explanation found in the notebook. Check the markdown formatting.</p>"))
 
 def show_code_for_step(step_choice):
     """
