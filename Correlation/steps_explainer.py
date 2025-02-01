@@ -69,7 +69,7 @@ def explain_step(step_choice):
     
     explanations = {
         1: "This step involves importing necessary Python libraries like pandas, NumPy, seaborn, and matplotlib.",
-        2: "The dataset is loaded using pandas or TensorFlow Datasets and inspected using .head() and .info() functions.",
+        2: "The dataset is loaded using pandas or Seaborn and inspected using .head() and .info() functions.",
         3: "This step explores dataset statistics, distributions, and class imbalances.",
         4: "Missing values are identified and handled using methods like imputation or deletion.",
         5: "Scatterplots are used to visualize relationships between numerical variables.",
@@ -106,6 +106,7 @@ def explain_step(step_choice):
             markdown_text = "".join(cell["source"])
             if selected_heading in markdown_text:
                 found_heading = True  # Start collecting markdown cells
+                continue
             elif found_heading and markdown_text.startswith("# "):  # Stop at the next section
                 break
             elif found_heading:
@@ -144,6 +145,7 @@ def show_code_for_step(step_choice):
             markdown_text = "".join(cell["source"])
             if selected_heading in markdown_text:
                 found_heading = True  # Start collecting code
+                continue
             elif found_heading and markdown_text.startswith("# "):  # Stop at the next section
                 break
         elif cell["cell_type"] == "code" and found_heading:
