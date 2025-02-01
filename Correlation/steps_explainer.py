@@ -67,27 +67,6 @@ def explain_step(step_choice):
     if not file_path:
         return
     
-    explanations = {
-        1: "This step involves importing necessary Python libraries like pandas, NumPy, seaborn, and matplotlib.",
-        2: "The dataset is loaded using pandas or Seaborn and inspected using .head() and .info() functions.",
-        3: "This step explores dataset statistics, distributions, and class imbalances.",
-        4: "Missing values are identified and handled using methods like imputation or deletion.",
-        5: "Scatterplots are used to visualize relationships between numerical variables.",
-        6: "Pearson correlation is computed to measure the linear relationship between variables.",
-        7: "A heatmap is plotted to show correlation values between all numerical features.",
-        8: "Spearman and Kendall correlation methods are explored for non-linear relationships.",
-        9: "Hypothesis testing is performed to check if correlation coefficients are statistically significant.",
-        10: "Variance Inflation Factor (VIF) is used to check for multicollinearity between predictors.",
-        11: "Outliers are detected using boxplots and their effect on correlation is analyzed.",
-        12: "Correlation is computed before and after removing outliers to observe its impact.",
-        13: "Partial correlation is computed to measure relationships while controlling for other variables.",
-        14: "Highly correlated features are identified and removed to avoid redundancy in models.",
-        15: "Correlation between categorical and numerical variables is examined using ANOVA and Chi-square tests.",
-        16: "Cross-correlation for time-series data is explored to find lag relationships between variables.",
-        17: "Rank transformation is applied to make correlation analysis more robust to outliers.",
-        18: "Bootstrap methods are used to compute confidence intervals for correlation coefficients."
-    }
-
     step_headers = get_project_steps()
     selected_heading = step_headers.get(step_choice, None)
 
@@ -103,9 +82,10 @@ def explain_step(step_choice):
 
     for cell in notebook_data["cells"]:
         if cell["cell_type"] == "markdown":
-            markdown_text = "".join(cell["source"])
-            if selected_heading in markdown_text:
-                found_heading = True  # Start collecting markdown cells
+            markdown_text = "".join(cell["source"]).strip()
+            
+            if markdown_text.startswith(f"# {selected_heading}"):
+                found_heading = True  # Start collecting text
                 continue
             elif found_heading and markdown_text.startswith("# "):  # Stop at the next section
                 break
@@ -113,15 +93,14 @@ def explain_step(step_choice):
                 extracted_explanation.append(markdown_text)
 
     print(f"\nStep Explanation: {selected_heading}\n")
-    print(explanations.get(step_choice, "No predefined explanation available."))
-    
     if extracted_explanation:
-        print("\nAdditional Explanation from Notebook:")
         print("\n".join(extracted_explanation))
+    else:
+        print("No detailed explanation found in the notebook.")
 
 def show_code_for_step(step_choice):
     """
-    Fetches and displays all relevant code blocks for the selected step.
+    Fetches and displays only the relevant code blocks for the selected step.
     """
     file_path = download_notebook()
     if not file_path:
@@ -142,8 +121,9 @@ def show_code_for_step(step_choice):
 
     for cell in notebook_data["cells"]:
         if cell["cell_type"] == "markdown":
-            markdown_text = "".join(cell["source"])
-            if selected_heading in markdown_text:
+            markdown_text = "".join(cell["source"]).strip()
+            
+            if markdown_text.startswith(f"# {selected_heading}"):
                 found_heading = True  # Start collecting code
                 continue
             elif found_heading and markdown_text.startswith("# "):  # Stop at the next section
@@ -151,8 +131,8 @@ def show_code_for_step(step_choice):
         elif cell["cell_type"] == "code" and found_heading:
             code_snippets.append("\n".join(cell["source"]))  # Collect all code blocks in the section
 
+    print(f"\nCode for Step {step_choice} ({selected_heading}):\n")
     if code_snippets:
-        print(f"\nCode for Step {step_choice} ({selected_heading}):\n")
-        print("\n\n".join(code_snippets))  # Show all code blocks
+        print("\n\n".join(code_snippets))
     else:
-        print(f"\n❌ No relevant code found for step {step_choice}. Check your notebook's structure.")
+        print(f"No relevant code found for step {step_choice}. Check your notebook's structure.")
