@@ -9,7 +9,7 @@ def download_notebook():
     """
     Downloads the notebook from GitHub if it is not already available in Colab.
     """
-    notebook_path = "/content/07_food_vision_milestone_project_1.ipynb"
+    notebook_path = "/content/food_vision_project.ipynb"
 
     if not os.path.exists(notebook_path):
         print("\nDownloading notebook from GitHub...")
