@@ -23,24 +23,24 @@ def get_project_steps():
     Returns a dictionary of model development steps.
     """
     return {
-        1: "Step 1: Import Required Libraries",
-        2: "Step 2: Load the Dataset",
-        3: "Step 3: Explore Data",
-        4: "Step 4: Handling Missing Values",
-        5: "Step 5: Visualizing Correlations using Scatterplots",
-        6: "Step 6: Computing Pearson Correlation",
-        7: "Step 7: Correlation Heatmap",
-        8: "Step 8: Additional Correlation Methods (Spearman & Kendall)",
-        9: "Step 9: Hypothesis Testing for Correlation",
-        10: "Step 10: Checking Multicollinearity with Variance Inflation Factor (VIF)",
-        11: "Step 11: Outlier Detection & Its Effect on Correlation",
-        12: "Step 12: Computing Correlation Before & After Removing Outliers",
-        13: "Step 13: Partial Correlation - Controlling for Other Variables",
-        14: "Step 14: Feature Selection Based on Correlation",
-        15: "Step 15: Correlation with Categorical Variables",
-        16: "Step 16: Cross-Correlation for Time-Series Data",
-        17: "Step 17: Rank Transformation for Robust Correlation",
-        18: "Step 18: Non-Parametric Bootstrap for Correlation Confidence Intervals"
+        1: "## Step 1: Import Required Libraries",
+        2: "## Step 2: Load the Dataset",
+        3: "## Step 3: Explore Data",
+        4: "## Step 4: Handling Missing Values",
+        5: "## Step 5: Visualizing Correlations using Scatterplots",
+        6: "## Step 6: Computing Pearson Correlation",
+        7: "## Step 7: Correlation Heatmap",
+        8: "## Step 8: Additional Correlation Methods (Spearman & Kendall)",
+        9: "## Step 9: Hypothesis Testing for Correlation",
+        10: "## Step 10: Checking Multicollinearity with Variance Inflation Factor (VIF)",
+        11: "## Step 11: Outlier Detection & Its Effect on Correlation",
+        12: "## Step 12: Computing Correlation Before & After Removing Outliers",
+        13: "## Step 13: Partial Correlation - Controlling for Other Variables",
+        14: "## Step 14: Feature Selection Based on Correlation",
+        15: "## Step 15: Correlation with Categorical Variables",
+        16: "## Step 16: Cross-Correlation for Time-Series Data",
+        17: "## Step 17: Rank Transformation for Robust Correlation",
+        18: "## Step 18: Non-Parametric Bootstrap for Correlation Confidence Intervals"
     }
 
 def show_project_steps():
@@ -50,7 +50,7 @@ def show_project_steps():
     steps = get_project_steps()
     print("\nModel Development Steps:")
     for step, description in steps.items():
-        print(f"{step}. {description}")
+        print(f"{step}. {description[3:]}")  # Remove "## " from display
 
 def get_user_step_choice():
     """
@@ -84,15 +84,15 @@ def explain_step(step_choice):
         if cell["cell_type"] == "markdown":
             markdown_text = "".join(cell["source"]).strip()
             
-            if markdown_text.startswith(f"# {selected_heading}"):
+            if markdown_text.startswith(selected_heading):
                 found_heading = True  # Start collecting text
                 continue
-            elif found_heading and markdown_text.startswith("# "):  # Stop at the next section
+            elif found_heading and markdown_text.startswith("## "):  # Stop at the next section
                 break
             elif found_heading:
                 extracted_explanation.append(markdown_text)
 
-    print(f"\nStep Explanation: {selected_heading}\n")
+    print(f"\nStep Explanation: {selected_heading[3:]}\n")
     if extracted_explanation:
         print("\n".join(extracted_explanation))
     else:
@@ -123,15 +123,15 @@ def show_code_for_step(step_choice):
         if cell["cell_type"] == "markdown":
             markdown_text = "".join(cell["source"]).strip()
             
-            if markdown_text.startswith(f"# {selected_heading}"):
+            if markdown_text.startswith(selected_heading):
                 found_heading = True  # Start collecting code
                 continue
-            elif found_heading and markdown_text.startswith("# "):  # Stop at the next section
+            elif found_heading and markdown_text.startswith("## "):  # Stop at the next section
                 break
         elif cell["cell_type"] == "code" and found_heading:
             code_snippets.append("\n".join(cell["source"]))  # Collect all code blocks in the section
 
-    print(f"\nCode for Step {step_choice} ({selected_heading}):\n")
+    print(f"\nCode for Step {step_choice} ({selected_heading[3:]}):\n")
     if code_snippets:
         print("\n\n".join(code_snippets))
     else:
