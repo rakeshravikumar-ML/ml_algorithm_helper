@@ -122,4 +122,26 @@ def show_code_for_step(step_choice):
 
     selected_heading = step_code.get(step_choice, None)
     if not selected_heading:
-        print("Invalid step n
+        print("Invalid step number. Try again.")
+        return
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        notebook_data = json.load(f)
+
+    found_heading = False
+    code_snippets = []
+
+    for cell in notebook_data["cells"]:
+        if cell["cell_type"] == "markdown":
+            markdown_text = "".join(cell["source"])
+            if selected_heading.lower() in markdown_text.lower():  # Case-insensitive match
+                found_heading = True  # Start collecting code after this markdown cell
+        elif cell["cell_type"] == "code" and found_heading:
+            code_snippets.append("".join(cell["source"]))  # Collect the next code cell(s)
+            break  # Stop after the first code cell following the heading
+
+    if code_snippets:
+        print(f"\nCode for Step {step_choice} ({selected_heading}):\n")
+        print(code_snippets[0])  # Show the first matching code block
+    else:
+        print(f"\n❌ No relevant code found for step {step_choice}. Check your notebook's structure.")
