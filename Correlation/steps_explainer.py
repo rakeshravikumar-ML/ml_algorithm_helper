@@ -59,9 +59,11 @@ def get_user_step_choice():
     step_choice = int(input("\nWhich step do you need help with? Enter the step number: "))
     return step_choice
 
+from IPython.display import Markdown, display
+
 def explain_step(step_choice):
     """
-    Fetches and displays the explanation from the notebook for the selected step.
+    Fetches and displays the explanation from the notebook for the selected step in Markdown format.
     """
     file_path = download_notebook()
     if not file_path:
@@ -84,9 +86,8 @@ def explain_step(step_choice):
         if cell["cell_type"] == "markdown":
             markdown_text = "".join(cell["source"]).strip()
 
-            # ✅ Check if the markdown cell CONTAINS the step heading, not just starts with it
             if selected_heading in markdown_text:
-                found_heading = True  # Start collecting text
+                found_heading = True
                 extracted_explanation.append(markdown_text)  # Include the header cell itself
                 continue
             elif found_heading and markdown_text.startswith("## Step"):  # Stop at the next step heading
@@ -94,11 +95,11 @@ def explain_step(step_choice):
             elif found_heading:
                 extracted_explanation.append(markdown_text)  # Collect all markdown content
 
-    print(f"\nStep Explanation: {selected_heading[3:]}\n")  # Display step title without "## "
     if extracted_explanation:
-        print("\n".join(extracted_explanation))
+        markdown_output = f"### {selected_heading[3:]}\n\n" + "\n\n".join(extracted_explanation)
+        display(Markdown(markdown_output))  # ✅ Display as Markdown
     else:
-        print("⚠️ No detailed explanation found in the notebook. Check the markdown formatting.")
+        display(Markdown("⚠️ **No detailed explanation found in the notebook.** Check the markdown formatting."))
 
 def show_code_for_step(step_choice):
     """
