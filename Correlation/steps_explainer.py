@@ -25,7 +25,7 @@ def get_project_steps():
     return {
         1: "## Step 1: Import Required Libraries",
         2: "## Step 2: Load the Dataset",
-        3: "## Step 3: Explore Data",
+        3: "## Step 3: Exploratory Data Analysis (EDA)",
         4: "## Step 4: Handling Missing Values",
         5: "## Step 5: Visualizing Correlations using Scatterplots",
         6: "## Step 6: Computing Pearson Correlation",
@@ -87,7 +87,7 @@ def explain_step(step_choice):
             if markdown_text.startswith(selected_heading):
                 found_heading = True  # Start collecting text
                 continue
-            elif found_heading and markdown_text.startswith("## "):  # Stop at the next section
+            elif found_heading and markdown_text.startswith("## Step"):  # Stop at the next step heading
                 break
             elif found_heading:
                 extracted_explanation.append(markdown_text)
@@ -126,7 +126,7 @@ def show_code_for_step(step_choice):
             if markdown_text.startswith(selected_heading):
                 found_heading = True  # Start collecting code
                 continue
-            elif found_heading and markdown_text.startswith("## "):  # Stop at the next section
+            elif found_heading and markdown_text.startswith("## Step"):  # Stop at the next step heading
                 break
         elif cell["cell_type"] == "code" and found_heading:
             code_snippets.append("\n".join(cell["source"]))  # Collect all code blocks in the section
