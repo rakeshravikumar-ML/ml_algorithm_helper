@@ -38,7 +38,7 @@ def show_project_steps():
     Displays the available model development steps.
     """
     steps = get_project_steps()
-    print("\nModel Development Steps:")
+    print("\nDevelopment Steps:")
     for step, description in steps.items():
         print(f"{step}. {description[3:]}")  # Remove "## " from display
 
